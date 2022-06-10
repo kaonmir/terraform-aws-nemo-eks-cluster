@@ -62,20 +62,6 @@ resource "aws_subnet" "eks_private_subnet" {
   }
 }
 
-# trust subnet
-resource "aws_subnet" "eks_trust_subnet" {
-  count = var.number_of_subnet
-
-  availability_zone = data.aws_availability_zones.available.names[count.index]
-  cidr_block        = "10.110.11${count.index + 1}.0/24"
-  vpc_id            = aws_vpc.eks_vpc.id
-
-  tags = {
-    "Name"                                      = "eks_trust_${local.alphabets[count.index]}"
-    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
-  }
-}
-
 resource "aws_internet_gateway" "eks_igw" {
   vpc_id = aws_vpc.eks_vpc.id
 
@@ -112,16 +98,6 @@ resource "aws_route_table" "eks_private_route" {
   }
 }
 
-# trust route table
-resource "aws_route_table" "eks_trust_route" {
-  vpc_id = aws_vpc.eks_vpc.id
-
-  tags = {
-    "Name" = "eks_trust"
-  }
-}
-
-
 # public route table association
 resource "aws_route_table_association" "eks_public_routing" {
   count = var.number_of_subnet
@@ -136,12 +112,4 @@ resource "aws_route_table_association" "eks_private_routing" {
 
   subnet_id      = aws_subnet.eks_private_subnet.*.id[count.index]
   route_table_id = aws_route_table.eks_private_route.id
-}
-
-# trust route table association
-resource "aws_route_table_association" "eks_trust_routing" {
-  count = var.number_of_subnet
-
-  subnet_id      = aws_subnet.eks_trust_subnet.*.id[count.index]
-  route_table_id = aws_route_table.eks_trust_route.id
 }
