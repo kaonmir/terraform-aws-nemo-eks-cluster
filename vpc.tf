@@ -2,6 +2,10 @@ locals {
   alphabets = ["a", "b", "c", "d"]
 }
 
+data "aws_availability_zones" "available" {
+  exclude_names = []
+}
+
 resource "aws_vpc" "eks_vpc" {
   cidr_block = "10.110.0.0/16"
 
