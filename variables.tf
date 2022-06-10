@@ -9,7 +9,8 @@ variable "number_of_subnet" {
   default     = 2
 }
 variable "cluster_name" {
-  type = string
+  type        = string
+  description = "클러스터 이름"
 }
 
 variable "nodegroup_instance_type" {
@@ -38,7 +39,7 @@ variable "admin_auto_scaling_group" {
     max_size     = number
     min_size     = number
   })
-  description = "App NodeGroup에서 노드의 최대, 최소, 희망 크기를 정한다."
+  description = "Admin NodeGroup에서 노드의 최대, 최소, 희망 크기를 정한다."
   default = {
     desired_size = 1
     max_size     = 2
