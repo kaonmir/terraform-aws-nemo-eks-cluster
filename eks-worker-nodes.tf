@@ -33,22 +33,22 @@ resource "aws_iam_role_policy_attachment" "nemo_eks_node_AmazonEC2ContainerRegis
 }
 
 # t3 small node group for business logics
-resource "aws_eks_node_group" "nodegroup_business" {
+resource "aws_eks_node_group" "nodegroup_app" {
   cluster_name    = aws_eks_cluster.nemo_eks_cluster.name
-  node_group_name = "nodegroup_business"
+  node_group_name = "nodegroup_app"
   node_role_arn   = aws_iam_role.nemo_eks_node.arn
   subnet_ids      = aws_subnet.nemo_eks_private_subnet[*].id
   instance_types  = [var.nodegroup_instance_type]
   disk_size       = 15
 
   labels = {
-    "role" = "nodegroup_business"
+    "role" = "nodegroup_app"
   }
 
   scaling_config {
-    desired_size = var.nodegroup_instance_desired_size
-    min_size     = max(var.nodegroup_instance_desired_size - 1, 0)
-    max_size     = var.nodegroup_instance_desired_size + 3
+    desired_size = var.app_auto_scaling_group.desired_size
+    min_size     = var.app_auto_scaling_group.min_size
+    max_size     = var.app_auto_scaling_group.max_size
   }
 
   depends_on = [
@@ -80,6 +80,12 @@ resource "aws_eks_node_group" "nodegroup_admin" {
     desired_size = 2
     min_size     = 2
     max_size     = 4
+  }
+
+  scaling_config {
+    desired_size = var.admin_auto_scaling_group.desired_size
+    min_size     = var.admin_auto_scaling_group.min_size
+    max_size     = var.admin_auto_scaling_group.max_size
   }
 
   depends_on = [
