@@ -19,7 +19,6 @@ variable "app_ec2_type" {
   default     = "t3.small"
 }
 
-
 variable "app_auto_scaling_group" {
   type = object({
     desired_size = number
@@ -52,4 +51,9 @@ variable "admin_auto_scaling_group" {
     max_size     = 2
     min_size     = 1
   }
+}
+
+variable "make_kube_config" {
+  type        = bool
+  description = "~/.kube/config에 클러스터 접근 권한을 덮어쓸 것인가?"
 }

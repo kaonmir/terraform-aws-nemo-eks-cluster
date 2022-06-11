@@ -85,6 +85,7 @@ resource "aws_iam_openid_connect_provider" "eks_oidc" {
 }
 
 resource "local_file" "kube_config" {
+  count = var.make_kube_config ? 1 : 0
   content = replace(yamlencode({
     apiVersion = "v1",
     clusters = [
