@@ -13,9 +13,10 @@ variable "cluster_name" {
   description = "클러스터 이름"
 }
 
-variable "nodegroup_instance_type" {
-  type    = string
-  default = "t3.small"
+variable "app_ec2_type" {
+  type        = string
+  description = "admin 노드들에 쓸 인스턴스 타입"
+  default     = "t3.small"
 }
 
 
@@ -25,12 +26,18 @@ variable "app_auto_scaling_group" {
     max_size     = number
     min_size     = number
   })
-  description = "App NodeGroup에서 노드의 최대, 최소, 희망 크기를 정한다."
+  description = "App NodeGroup에서 노드의 최대, 최소, 희망 크기"
   default = {
     desired_size = 1
     max_size     = 2
     min_size     = 1
   }
+}
+
+variable "admin_ec2_type" {
+  type        = string
+  description = "admin 노드들에 쓸 인스턴스 타입"
+  default     = "t3.small"
 }
 
 variable "admin_auto_scaling_group" {
@@ -39,7 +46,7 @@ variable "admin_auto_scaling_group" {
     max_size     = number
     min_size     = number
   })
-  description = "Admin NodeGroup에서 노드의 최대, 최소, 희망 크기를 정한다."
+  description = "Admin NodeGroup에서 노드의 최대, 최소, 희망 크기"
   default = {
     desired_size = 1
     max_size     = 2

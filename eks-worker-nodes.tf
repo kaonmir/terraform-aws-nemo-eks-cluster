@@ -32,13 +32,13 @@ resource "aws_iam_role_policy_attachment" "eks_node_AmazonEC2ContainerRegistryRe
   role       = aws_iam_role.eks_node.name
 }
 
-# t3 small node group for business logics
+# t3 small node group for app logics
 resource "aws_eks_node_group" "nodegroup_app" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = "nodegroup_app"
   node_role_arn   = aws_iam_role.eks_node.arn
   subnet_ids      = aws_subnet.eks_private_subnet[*].id
-  instance_types  = [var.nodegroup_instance_type]
+  instance_types  = [var.app_ec2_type]
   disk_size       = 15
 
   labels = {
@@ -59,7 +59,7 @@ resource "aws_eks_node_group" "nodegroup_app" {
 
   tags = {
     "Name" = "${aws_eks_cluster.eks_cluster.name}_eks_node"
-    "role" = "business"
+    "role" = "app"
   }
 }
 
@@ -69,7 +69,7 @@ resource "aws_eks_node_group" "nodegroup_admin" {
   node_group_name = "nodegroup_admin"
   node_role_arn   = aws_iam_role.eks_node.arn
   subnet_ids      = aws_subnet.eks_private_subnet[*].id
-  instance_types  = [var.nodegroup_instance_type]
+  instance_types  = [var.admin_ec2_type]
   disk_size       = 10
 
   labels = {
