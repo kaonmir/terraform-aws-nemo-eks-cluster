@@ -31,7 +31,7 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSVPCResourceContr
 resource "aws_security_group" "eks_cluster" {
   name        = "${var.cluster_name}-eks_cluster"
   description = "Cluster communication with worker nodes"
-  vpc_id      = aws_vpc.eks_vpc.id
+  vpc_id      = module.vpc.vpc_id
 
   egress {
     from_port   = 0
@@ -63,8 +63,11 @@ resource "aws_eks_cluster" "eks_cluster" {
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
   vpc_config {
-    security_group_ids      = [aws_security_group.eks_cluster.id]
-    subnet_ids              = concat(aws_subnet.eks_public_subnet[*].id, aws_subnet.eks_private_subnet[*].id)
+    security_group_ids = [aws_security_group.eks_cluster.id]
+    subnet_ids = concat(
+      module.vpc.public_subnets[*],
+      module.vpc.private_subnets[*]
+    )
     endpoint_private_access = true
     endpoint_public_access  = true
   }

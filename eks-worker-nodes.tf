@@ -37,7 +37,7 @@ resource "aws_eks_node_group" "nodegroup_app" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = "nodegroup_app"
   node_role_arn   = aws_iam_role.eks_node.arn
-  subnet_ids      = aws_subnet.eks_private_subnet[*].id
+  subnet_ids      = module.vpc.private_subnets[*]
   instance_types  = [var.app_ec2_type]
   disk_size       = 15
 
@@ -68,7 +68,7 @@ resource "aws_eks_node_group" "nodegroup_admin" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = "nodegroup_admin"
   node_role_arn   = aws_iam_role.eks_node.arn
-  subnet_ids      = aws_subnet.eks_private_subnet[*].id
+  subnet_ids      = module.vpc.private_subnets[*]
   instance_types  = [var.admin_ec2_type]
   disk_size       = 10
 
