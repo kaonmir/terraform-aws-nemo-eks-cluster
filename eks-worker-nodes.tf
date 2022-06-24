@@ -42,7 +42,7 @@ resource "aws_eks_node_group" "nodegroup_app" {
   disk_size       = 15
 
   labels = {
-    "role" = "nodegroup_app"
+    role = "nodegroup_app"
   }
 
   scaling_config {
