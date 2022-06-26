@@ -89,7 +89,7 @@ resource "aws_eks_node_group" "nodegroup_admin" {
   ]
 
   tags = {
-    "Name" = "${aws_eks_cluster.eks_cluster.name}_eks_node"
+    Name   = "${aws_eks_cluster.eks_cluster.name}_eks_node"
     "Role" = "admin"
   }
 
@@ -97,4 +97,23 @@ resource "aws_eks_node_group" "nodegroup_admin" {
     key    = "TAINED_BY_ADMIN"
     effect = "NO_SCHEDULE"
   }
+}
+
+resource "aws_iam_policy" "noncompliantpolicy" {
+  name = "noncompliantpolicy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "iam:CreatePolicyVersion"
+        ]
+        Effect = "Allow"
+        Resource = [
+          "*" # Sensitive
+        ]
+      }
+    ]
+  })
 }
